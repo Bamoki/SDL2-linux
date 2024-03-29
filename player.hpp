@@ -23,6 +23,27 @@ namespace pl
 
             startX = playerR.x;
             startY = playerR.y;
+
+            cooldownTime = 1000;
+            timeSinceLastShoot = cooldownTime;
+        }
+
+        void shoot(){
+
+            for(auto& bullet:bullets){
+                if(!bullet.isFired()){
+                    bullet.shoot();
+                    break;
+                }
+                
+            }
+
+            float bulletY = playerR.y + playerR.h / 2;
+
+            bl::Bullet bullet(startX + playerR.w, bulletY, speedb);
+            
+            bullets.push_back(bullet);
+
         }
 
         void processEvents(SDL_Event ev)
@@ -46,12 +67,17 @@ namespace pl
 
             if (Keystates[SDL_SCANCODE_SPACE])
             {
-                createBullet();
+                if(timeSinceLastShoot >= cooldownTime){
+                    shoot();
+                    timeSinceLastShoot = 0;
+                }   
+                
             }
         }
 
         void update()
         {
+            timeSinceLastShoot += deltaTime;
             x = playerR.x;
             y = playerR.y;
             if (up == true)
@@ -80,15 +106,11 @@ namespace pl
             }
         }
 
+        
+
     private:
         float speedb = 3.0f;
         std::vector<bl::Bullet> bullets;
-        void createBullet()
-        {
-            bl::Bullet bullet(startX, startY, speedb);
-            bullets.push_back(bullet);
-            bullets.back().shoot();
-        }
 
         SDL_Rect playerR;
         bool up;
@@ -97,5 +119,9 @@ namespace pl
         float startX, startY;
         int x;
         int y;
+
+        Uint32 deltaTime;
+        Uint32 timeSinceLastShoot;
+        Uint32 cooldownTime;
     };
 }

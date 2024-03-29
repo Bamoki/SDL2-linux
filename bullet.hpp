@@ -11,30 +11,34 @@ namespace bl{
             Bullet(float startX, float startY, float bulletSpeed) : x(startX), y(startY), bulletSpeed(bulletSpeed) {
                 bulletR.h = 20;
                 bulletR.w = 10;
-                //startX = bulletR.x;
-                //startY = bulletR.y;
                 bulletR.x = 200;
                 bulletR.y = 100;
+
+                std::cout<<leftBullet<<std::endl;
+                
+                
             }
 
             void move(SDL_Rect player){
-                std::cout<<"x bala = "<< bulletR.x<< " / " <<"y bala = " << bulletR.y << std::endl;
+
+                //std::cout<<"x bala = "<< bulletR.x<< " / " <<"y bala = " << bulletR.y << std::endl;
                 
-                if(!fired){
+                if(fired) {
                     x += bulletSpeed;
                     bulletR.x = static_cast<int>(x);
-                    
                 }
                 
+                bulletR.y = y;
                 
-            }
-
-            void shootBullet(SDL_Rect Player){
-                bullets.emplace_back(x,Player.y,bulletSpeed);
             }
 
             void shoot(){
                 fired = true;
+                
+            }
+
+            bool isFired() const{
+                return fired;
             }
 
             void render(SDL_Renderer* renderer){
@@ -43,9 +47,10 @@ namespace bl{
             }
 
         private:
+            int leftBullet = 10;
             std::vector<Bullet> bullets;
             float x,y,bulletSpeed;
             SDL_Rect bulletR;
-            bool fired = false;
+            bool fired;
     };
 }
