@@ -1,10 +1,35 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <iostream>
+#include <sstream>
 
 namespace engine{
     class Engine{
         public:
+        Engine(){
+        
+            lastFrameTime = SDL_GetTicks();
+            frames = 0;
+            fpsTimer = 0;
+            fps = 0;
+        }
+    
+        void update(){
+            //std::cout<<fps<<std::endl;
+            Uint32 currentTime = SDL_GetTicks();
+            deltaTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+
+            frames++;
+            fpsTimer += deltaTime;
+
+            if(fpsTimer >= 1000){
+                fps = frames * 1000 / fpsTimer;
+                frames = 0;
+                fpsTimer = 0;
+            }
+        }
+
         void destroy_engine(SDL_Window* window, SDL_Renderer* renderer){
             SDL_DestroyWindow(window);
             SDL_DestroyRenderer(renderer);
@@ -24,6 +49,17 @@ namespace engine{
             SDL_RenderCopy(render,textT,nullptr,&destRect);
             SDL_DestroyTexture(textT);
         }
+
+        Uint32 getFps(){
+            return fps;
+        }
+
+        private:
+            Uint32 deltaTime;
+            Uint32 lastFrameTime;
+            Uint32 frames;
+            Uint32 fpsTimer;
+            Uint32 fps;
             
     };
 }

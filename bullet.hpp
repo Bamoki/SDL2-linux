@@ -14,7 +14,7 @@ namespace bl{
                 bulletR.x = 200;
                 bulletR.y = 100;
 
-                std::cout<<leftBullet<<std::endl;
+                
                 
                 
             }
@@ -23,9 +23,11 @@ namespace bl{
 
                 //std::cout<<"x bala = "<< bulletR.x<< " / " <<"y bala = " << bulletR.y << std::endl;
                 
+                
                 if(fired) {
                     x += bulletSpeed;
                     bulletR.x = static_cast<int>(x);
+                    
                 }
                 
                 bulletR.y = y;
@@ -41,13 +43,14 @@ namespace bl{
                 return fired;
             }
 
+            
+
             void render(SDL_Renderer* renderer){
                 SDL_SetRenderDrawColor(renderer,255,0,0,255);
                 SDL_RenderFillRect(renderer,&bulletR);
             }
 
         private:
-            int leftBullet = 10;
             std::vector<Bullet> bullets;
             float x,y,bulletSpeed;
             SDL_Rect bulletR;

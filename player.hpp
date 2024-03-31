@@ -1,8 +1,11 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include "bullet.hpp"
+
+
 
 namespace pl
 {
@@ -24,8 +27,9 @@ namespace pl
             startX = playerR.x;
             startY = playerR.y;
 
-            cooldownTime = 1000;
+            cooldownTime = 300;
             timeSinceLastShoot = cooldownTime;
+            lastFrameTime = SDL_GetTicks();
         }
 
         void shoot(){
@@ -67,17 +71,33 @@ namespace pl
 
             if (Keystates[SDL_SCANCODE_SPACE])
             {
-                if(timeSinceLastShoot >= cooldownTime){
+                if(timeSinceLastShoot >= cooldownTime && leftbullets >= 1){
                     shoot();
                     timeSinceLastShoot = 0;
+                    //std::cout<<leftbullets<<std::endl;
+                    leftbullets -= 1;
                 }   
                 
+            }
+
+            if (Keystates[SDL_SCANCODE_1] )
+            {
+                
+                leftbullets += 10;
+                //std::cout<<"10 balas mas ahora tienes: "<<leftbullets<<std::endl;
             }
         }
 
         void update()
         {
+
+            Uint32 currentTime = SDL_GetTicks();
+            deltaTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+
             timeSinceLastShoot += deltaTime;
+
+
             x = playerR.x;
             y = playerR.y;
             if (up == true)
@@ -93,6 +113,8 @@ namespace pl
             {
                 bullet.move(playerR);
             }
+
+            
         }
 
         void render()
@@ -106,6 +128,9 @@ namespace pl
             }
         }
 
+        int getLeftBullets(){
+            return leftbullets;
+        }
         
 
     private:
@@ -119,9 +144,13 @@ namespace pl
         float startX, startY;
         int x;
         int y;
+        int leftbullets = 10;
 
         Uint32 deltaTime;
         Uint32 timeSinceLastShoot;
         Uint32 cooldownTime;
+        Uint32 lastFrameTime;
+
+        
     };
 }

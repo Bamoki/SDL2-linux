@@ -48,10 +48,17 @@ int main(int argc, char* args[]){
     pl::Player player(ev,renderer);
     
     SDL_Color colorT = {255,255,255};
+    SDL_Color colorB = {0,255,0};
+    
+    int lf;
+    
+    
     
     //bucle
     while(run){
-        
+
+        //std::cout<<engine.getFps()<<std::endl;
+        std::cout<<lf<<std::endl;
         while(SDL_PollEvent(&ev) != 0){
             if(ev.type == SDL_QUIT){
                 run = false;
@@ -65,12 +72,26 @@ int main(int argc, char* args[]){
             player.processEvents(ev);
         }
         
+        engine.update();
         player.update();
+
+        lf = player.getLeftBullets();
+        std::string leftbulletsT = std::to_string(lf);
+
+
+        if (lf <= 5){
+            colorB = {255,0,0};
+        }
+        else{
+            colorB = {0,255,0};
+        }
 
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
         SDL_RenderClear(renderer);
 
         engine.text(font,renderer,"bamoki engine V0.0.1", colorT, 20, 20);
+        engine.text(font,renderer,"balas: " + leftbulletsT, colorB, 20, 40);
+        
 
         player.render();
         
