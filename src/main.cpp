@@ -49,8 +49,13 @@ int main(int argc, char* args[]){
     
     SDL_Color colorT = {255,255,255};
     SDL_Color colorB = {0,255,0};
+    SDL_Color colorF = {0,255,0};
     
     int lf;
+    int fps = engine.getFps();
+    
+
+    ey::Enemy enemy(renderer);
     
     
     
@@ -58,7 +63,7 @@ int main(int argc, char* args[]){
     while(run){
 
         //std::cout<<engine.getFps()<<std::endl;
-        std::cout<<lf<<std::endl;
+        
         while(SDL_PollEvent(&ev) != 0){
             if(ev.type == SDL_QUIT){
                 run = false;
@@ -72,11 +77,16 @@ int main(int argc, char* args[]){
             player.processEvents(ev);
         }
         
+        // Update
         engine.update();
         player.update();
+        enemy.update();
 
         lf = player.getLeftBullets();
+        fps = engine.getFps();
+        
         std::string leftbulletsT = std::to_string(lf);
+        std::string fpsT = std::to_string(engine.getFps());
 
 
         if (lf <= 5){
@@ -85,19 +95,27 @@ int main(int argc, char* args[]){
         else{
             colorB = {0,255,0};
         }
+        if (fps <= 30){
+            colorF = {255,0,0};
+        }
+        else{
+            colorF = {0,255,0};
+        }
 
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
         SDL_RenderClear(renderer);
 
-        engine.text(font,renderer,"bamoki engine V0.0.1", colorT, 20, 20);
+        // Texto en pantalla
+        engine.text(font,renderer,"bamoki engine V0.0.3", colorT, 20, 20);
         engine.text(font,renderer,"balas: " + leftbulletsT, colorB, 20, 40);
+        engine.text(font,renderer,"fps: " + fpsT, colorF, 20, 60);
         
-
+        // Render
         player.render();
+        enemy.render();
         
         SDL_RenderPresent(renderer);
     }
     engine.destroy_engine(window,renderer);
     return 0;
-
 }

@@ -1,3 +1,6 @@
+#ifndef BULLET_HPP
+#define BULLET_HPP
+
 #include <SDL.h>
 #include <iostream>
 #include <vector>
@@ -11,22 +14,23 @@ namespace bl{
             Bullet(float startX, float startY, float bulletSpeed) : x(startX), y(startY), bulletSpeed(bulletSpeed) {
                 bulletR.h = 20;
                 bulletR.w = 10;
-                bulletR.x = 200;
-                bulletR.y = 100;
+                bulletR.x = 0;
+                bulletR.y = 0;
 
-                
-                
-                
             }
 
-            void move(SDL_Rect player){
-
-                //std::cout<<"x bala = "<< bulletR.x<< " / " <<"y bala = " << bulletR.y << std::endl;
-                
+            void move(bool Right,SDL_Rect Rect){
                 
                 if(fired) {
-                    x += bulletSpeed;
-                    bulletR.x = static_cast<int>(x);
+                    if(Right == true){
+                        x += bulletSpeed;
+                        bulletR.x = static_cast<int>(x);
+                    }
+                    if(Right == false){
+                        x -= bulletSpeed;
+                        bulletR.x = static_cast<int>(x);
+                    }
+                    
                     
                 }
                 
@@ -50,6 +54,10 @@ namespace bl{
                 SDL_RenderFillRect(renderer,&bulletR);
             }
 
+            bool isOutOfBound(int width, int height){
+                return (x<0 || x > width || y < 0 || y > height);
+            }
+
         private:
             std::vector<Bullet> bullets;
             float x,y,bulletSpeed;
@@ -57,3 +65,5 @@ namespace bl{
             bool fired;
     };
 }
+
+#endif

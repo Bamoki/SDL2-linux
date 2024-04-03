@@ -4,8 +4,9 @@
 #include <sstream>
 
 #include "bullet.hpp"
+#include "global.hpp"
 
-
+glo::Global global;
 
 namespace pl
 {
@@ -13,13 +14,12 @@ namespace pl
     {
 
     public:
-        Player(SDL_Event ev, SDL_Renderer *renderer) : renderer(renderer)
-        {
+        Player(SDL_Event ev, SDL_Renderer *renderer) : renderer(renderer){
 
             up = false;
             down = false;
             playerR.x = 100;
-            playerR.y = 100;
+            playerR.y = 200;
             playerR.h = 50;
             playerR.w = 30;
             processEvents(ev);
@@ -74,7 +74,6 @@ namespace pl
                 if(timeSinceLastShoot >= cooldownTime && leftbullets >= 1){
                     shoot();
                     timeSinceLastShoot = 0;
-                    //std::cout<<leftbullets<<std::endl;
                     leftbullets -= 1;
                 }   
                 
@@ -84,13 +83,13 @@ namespace pl
             {
                 
                 leftbullets += 10;
-                //std::cout<<"10 balas mas ahora tienes: "<<leftbullets<<std::endl;
+                
             }
         }
 
         void update()
         {
-
+            
             Uint32 currentTime = SDL_GetTicks();
             deltaTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
@@ -111,9 +110,10 @@ namespace pl
 
             for (auto &bullet : bullets)
             {
-                bullet.move(playerR);
+                bullet.move(true,playerR);
             }
 
+            global.bulletOutOfScreen(bullets,740,540);
             
         }
 
@@ -131,8 +131,6 @@ namespace pl
         int getLeftBullets(){
             return leftbullets;
         }
-        
-
     private:
         float speedb = 3.0f;
         std::vector<bl::Bullet> bullets;
@@ -150,7 +148,5 @@ namespace pl
         Uint32 timeSinceLastShoot;
         Uint32 cooldownTime;
         Uint32 lastFrameTime;
-
-        
     };
 }
