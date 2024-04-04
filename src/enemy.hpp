@@ -10,22 +10,12 @@ namespace ey{
             Enemy(SDL_Renderer* renderer) : renderer(renderer){
                 enemyR.h = 50;
                 enemyR.w = 30;
-                enemyR.y = 100;
+                enemyR.y = 530;
                 enemyR.x = 500;
 
-                cooldownTime = 600;
+                cooldownTime = 400;
                 timeSinceLastShoot = cooldownTime;
                 lastFrameTime = SDL_GetTicks();
-
-                cooldownUp = 1000;
-                timeSinceMoveUp = cooldownUp;
-
-                cooldownDown = 5000;
-                timeSinceMoveDown= cooldownDown;
-
-                moveDown = false;
-                moveUp = false;
-                
             }
 
             void shoot(){
@@ -49,19 +39,16 @@ namespace ey{
                 lastFrameTime = currentTime;
 
                 timeSinceLastShoot += deltaTime;
-                timeSinceMoveUp += deltaTime;
-                timeSinceMoveDown += deltaTime;
 
                 move();
                 global.bulletOutOfScreen(bullets,740,540);
-                
             }
             void render(){
                 SDL_SetRenderDrawColor(renderer,250,0,0,250);
                 SDL_RenderFillRect(renderer,&enemyR);
 
                 for(auto& bullet:bullets){
-                    bullet.render(renderer);
+                    bullet.render(renderer,255,0,0,255);
                 }
             }
             void move(){
@@ -76,31 +63,27 @@ namespace ey{
                     
                 }
             
-                /*if(timeSinceMoveDown >= cooldownDown){
-                    moveUp = false;
+                if(enemyR.y == 530){
                     moveDown = true;
-                    timeSinceMoveDown = 0;
-                }
+                    moveUp = false;
 
-                if(timeSinceMoveUp >= cooldownUp){
+                }
+                if(enemyR.y == 0){
                     moveUp = true;
                     moveDown = false;
-                    timeSinceMoveUp = 0;
-                }   */
+                }
 
                 // Movement of bullets
                 for(auto& bullet:bullets){
                     bullet.move(false,enemyR);
-                }
-                
-                
+                }      
 
                 // Movement of enemy
                 if(moveDown == true){
-                    enemyR.y += 1;
+                    enemyR.y -= 5;
                 }
                 if(moveUp == true){
-                    enemyR.y -= 1;
+                    enemyR.y += 5;
                 }
             }
         private:
@@ -111,16 +94,12 @@ namespace ey{
             Uint32 timeSinceLastShoot;
             Uint32 cooldownTime;
             Uint32 lastFrameTime;
-            Uint32 timeSinceMoveUp;
-            Uint32 timeSinceMoveDown;
-            Uint32 cooldownUp;
-            Uint32 cooldownDown;
         
             std::vector<bl::Bullet> bullets;
-            float speedb = 3.0f;
+            float speedb = 6.0f;
             float startX, startY;
 
-            bool moveUp;
-            bool moveDown;
+            bool moveUp = false;
+            bool moveDown = false;
     };
 }

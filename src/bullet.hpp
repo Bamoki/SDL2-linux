@@ -49,8 +49,8 @@ namespace bl{
 
             
 
-            void render(SDL_Renderer* renderer){
-                SDL_SetRenderDrawColor(renderer,255,0,0,255);
+            void render(SDL_Renderer* renderer,int r,int g,int b,int a){
+                SDL_SetRenderDrawColor(renderer,r,g,b,a);
                 SDL_RenderFillRect(renderer,&bulletR);
             }
 

@@ -14,7 +14,7 @@ namespace pl
     {
 
     public:
-        Player(SDL_Event ev, SDL_Renderer *renderer) : renderer(renderer){
+        Player(SDL_Renderer *renderer) : renderer(renderer){
 
             up = false;
             down = false;
@@ -22,12 +22,11 @@ namespace pl
             playerR.y = 200;
             playerR.h = 50;
             playerR.w = 30;
-            processEvents(ev);
 
             startX = playerR.x;
             startY = playerR.y;
 
-            cooldownTime = 300;
+            cooldownTime = 200;
             timeSinceLastShoot = cooldownTime;
             lastFrameTime = SDL_GetTicks();
         }
@@ -124,7 +123,7 @@ namespace pl
 
             for (auto &bullet : bullets)
             {
-                bullet.render(renderer);
+                bullet.render(renderer,0,255,0,255);
             }
         }
 
@@ -132,7 +131,7 @@ namespace pl
             return leftbullets;
         }
     private:
-        float speedb = 3.0f;
+        float speedb = 10.0f;
         std::vector<bl::Bullet> bullets;
 
         SDL_Rect playerR;

@@ -10,16 +10,16 @@
 //variables
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
-const std::string h = "test 0.0.1";
 SDL_Rect text;
 
-bool run = true;
+bool run = false;
+bool startGame = false;
 
 int main(int argc, char* args[]){
 
     //iniciar sdl2, si inicia bien que se cree la ventana
     if(SDL_Init(SDL_INIT_EVERYTHING) >= 0){
-        window = SDL_CreateWindow("hola",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,740,540,SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow("game",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,740,540,SDL_WINDOW_SHOWN);
     }
     //comprobar que la ventana no este vacia
     if(window == nullptr){
@@ -45,7 +45,7 @@ int main(int argc, char* args[]){
     SDL_Event ev;
     SDL_Event input;
 
-    pl::Player player(ev,renderer);
+    pl::Player player(renderer);
     
     SDL_Color colorT = {255,255,255};
     SDL_Color colorB = {0,255,0};
@@ -56,10 +56,40 @@ int main(int argc, char* args[]){
     
 
     ey::Enemy enemy(renderer);
+
+    while (startGame == false){
+        
+         while(SDL_PollEvent(&ev) != 0){
+            if(ev.type == SDL_QUIT){
+                run = false;
+            }
+            else if(ev.type == SDL_KEYDOWN){
+                if(ev.key.keysym.sym == SDLK_ESCAPE){
+                    run = false;
+                }
+            }
+            if(ev.type == SDL_KEYDOWN and startGame == false){
+                if(ev.key.keysym.sym == SDLK_e){
+                    startGame = true;
+                    run = true;
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer,100,150,0,255);
+        SDL_RenderClear(renderer);
+
+        engine.text(font,renderer,"Controles: ", colorT, 100, 100);
+        engine.text(font,renderer,"Subir: W", colorT, 120, 120);
+        engine.text(font,renderer,"Bajar: S", colorT, 120, 140);
+        engine.text(font,renderer,"Disparar: ESPACIO", colorT, 120, 160);
+
+        engine.text(font,renderer,"Presione E para empezar", colorT, 250, 500);
+
+        SDL_RenderPresent(renderer);
+    }
     
-    
-    
-    //bucle
+    //bucle juego
     while(run){
 
         //std::cout<<engine.getFps()<<std::endl;
@@ -72,7 +102,12 @@ int main(int argc, char* args[]){
                 if(ev.key.keysym.sym == SDLK_ESCAPE){
                     run = false;
                 }
-                
+            }
+            if(ev.type == SDL_KEYDOWN and startGame == false){
+                if(ev.key.keysym.sym == SDLK_SPACE){
+                    startGame = true;
+                    std::cout<<"hoa\n";
+                }
             }
             player.processEvents(ev);
         }
