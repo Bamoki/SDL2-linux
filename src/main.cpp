@@ -6,6 +6,7 @@
 #include "engine.cpp"
 #include "player.hpp"
 #include "enemy.hpp"
+#include "collision.hpp"
 
 //variables
 SDL_Window* window = nullptr;
@@ -40,6 +41,9 @@ int main(int argc, char* args[]){
 
     //comprobar que sdl2 y sdl2-ttf carguen
     engine::Engine engine;
+
+    
+
 
     //evento
     SDL_Event ev;
@@ -92,8 +96,6 @@ int main(int argc, char* args[]){
     //bucle juego
     while(run){
 
-        //std::cout<<engine.getFps()<<std::endl;
-        
         while(SDL_PollEvent(&ev) != 0){
             if(ev.type == SDL_QUIT){
                 run = false;
@@ -106,7 +108,7 @@ int main(int argc, char* args[]){
             if(ev.type == SDL_KEYDOWN and startGame == false){
                 if(ev.key.keysym.sym == SDLK_SPACE){
                     startGame = true;
-                    std::cout<<"hoa\n";
+                    
                 }
             }
             player.processEvents(ev);
@@ -137,11 +139,21 @@ int main(int argc, char* args[]){
             colorF = {0,255,0};
         }
 
+        // Verificar colisiones
+        if (player.handleBulletCollisions(enemy.getRect())) {
+            std::cout << "El enemigo ha sido alcanzado!" << std::endl;
+        }
+
+        if (enemy.handleBulletCollisions(player.getRect())) {
+            std::cout << "El jugador ha sido alcanzado!" << std::endl;
+        }
+
+
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
         SDL_RenderClear(renderer);
 
         // Texto en pantalla
-        engine.text(font,renderer,"bamoki engine V0.0.3", colorT, 20, 20);
+        engine.text(font,renderer,"bamoki engine V0.0.4", colorT, 20, 20);
         engine.text(font,renderer,"balas: " + leftbulletsT, colorB, 20, 40);
         engine.text(font,renderer,"fps: " + fpsT, colorF, 20, 60);
         

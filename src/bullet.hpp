@@ -47,8 +47,6 @@ namespace bl{
                 return fired;
             }
 
-            
-
             void render(SDL_Renderer* renderer,int r,int g,int b,int a){
                 SDL_SetRenderDrawColor(renderer,r,g,b,a);
                 SDL_RenderFillRect(renderer,&bulletR);
@@ -57,6 +55,15 @@ namespace bl{
             bool isOutOfBound(int width, int height){
                 return (x<0 || x > width || y < 0 || y > height);
             }
+
+           SDL_Rect getRect() const{
+                return bulletR;
+           }
+           void reset(){
+                fired = false;
+                y = 1000;
+                x = 100;
+           }
 
         private:
             std::vector<Bullet> bullets;

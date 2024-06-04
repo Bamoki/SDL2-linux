@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "bullet.hpp"
-
+#include "collision.hpp"
 
 namespace ey{
     class Enemy{
@@ -85,6 +85,20 @@ namespace ey{
                 if(moveUp == true){
                     enemyR.y += 5;
                 }
+            }
+        
+            bool handleBulletCollisions(const SDL_Rect& targetRect) {
+                for (auto& bullet : bullets) {
+                    if (bullet.isFired() && checkCollision(bullet.getRect(), targetRect)) {
+                        bullet.reset();
+                        return true; // Colisión detectada
+                    }
+                }
+                return false;
+            }
+
+            SDL_Rect getRect() const {
+                return enemyR;
             }
         private:
             SDL_Renderer* renderer;

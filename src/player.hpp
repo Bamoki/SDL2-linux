@@ -5,6 +5,8 @@
 
 #include "bullet.hpp"
 #include "global.hpp"
+#include <SDL_scancode.h>
+#include "collision.hpp"
 
 glo::Global global;
 
@@ -129,6 +131,22 @@ namespace pl
 
         int getLeftBullets(){
             return leftbullets;
+        }
+
+
+        bool handleBulletCollisions(const SDL_Rect& targetRect) {
+            for (auto& bullet : bullets) {
+                if (bullet.isFired() && checkCollision(bullet.getRect(), targetRect)) {
+                    bullet.reset();
+                    
+                    return true; // Colisión detectada
+                }
+            }
+            return false;
+        }
+
+        SDL_Rect getRect() const {
+            return playerR;
         }
     private:
         float speedb = 10.0f;
