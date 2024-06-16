@@ -33,6 +33,7 @@ namespace engine{
         void destroy_engine(SDL_Window* window, SDL_Renderer* renderer){
             SDL_DestroyWindow(window);
             SDL_DestroyRenderer(renderer);
+            
             TTF_Quit();
             SDL_Quit();
         }

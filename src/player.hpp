@@ -25,13 +25,15 @@ namespace pl
             playerR.h = 50;
             playerR.w = 30;
 
+            
+
             startX = playerR.x;
             startY = playerR.y;
 
             cooldownTime = 200;
             timeSinceLastShoot = cooldownTime;
             lastFrameTime = SDL_GetTicks();
-        }
+        } 
 
         void shoot(){
 
@@ -82,9 +84,7 @@ namespace pl
 
             if (Keystates[SDL_SCANCODE_1] )
             {
-                
                 leftbullets += 10;
-                
             }
         }
 
@@ -96,7 +96,6 @@ namespace pl
             lastFrameTime = currentTime;
 
             timeSinceLastShoot += deltaTime;
-
 
             x = playerR.x;
             y = playerR.y;
@@ -115,6 +114,14 @@ namespace pl
             }
 
             global.bulletOutOfScreen(bullets,740,540);
+
+            if (playerR.y >= 530){
+                playerR.y -= 10;
+            }
+            else if(playerR.y <= -30){
+                playerR.y += 10;
+            }
+
             
         }
 
@@ -148,6 +155,13 @@ namespace pl
         SDL_Rect getRect() const {
             return playerR;
         }
+
+        int getHealth(){
+            return health;
+        }
+        void hit(){
+            health -= 1;
+        }
     private:
         float speedb = 10.0f;
         std::vector<bl::Bullet> bullets;
@@ -160,6 +174,7 @@ namespace pl
         int x;
         int y;
         int leftbullets = 10;
+        int health = 10;
 
         Uint32 deltaTime;
         Uint32 timeSinceLastShoot;

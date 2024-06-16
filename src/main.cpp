@@ -124,6 +124,7 @@ int main(int argc, char* args[]){
         
         std::string leftbulletsT = std::to_string(lf);
         std::string fpsT = std::to_string(engine.getFps());
+        std::string healthPlayerT = std::to_string(player.getHealth());
 
 
         if (lf <= 5){
@@ -138,15 +139,20 @@ int main(int argc, char* args[]){
         else{
             colorF = {0,255,0};
         }
-
-        // Verificar colisiones
+        
+        /* Verificar colisiones
         if (player.handleBulletCollisions(enemy.getRect())) {
             std::cout << "El enemigo ha sido alcanzado!" << std::endl;
         }
-
+        */
         if (enemy.handleBulletCollisions(player.getRect())) {
-            std::cout << "El jugador ha sido alcanzado!" << std::endl;
+            player.hit();
+            std::cout<<player.getHealth()<<std::endl;
+            if(player.getHealth() <= -1){
+                run = false;
+            }
         }
+
 
 
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
@@ -156,6 +162,7 @@ int main(int argc, char* args[]){
         engine.text(font,renderer,"bamoki engine V0.0.4", colorT, 20, 20);
         engine.text(font,renderer,"balas: " + leftbulletsT, colorB, 20, 40);
         engine.text(font,renderer,"fps: " + fpsT, colorF, 20, 60);
+        engine.text(font,renderer,"vida jugador: " + healthPlayerT,colorT,400,20);
         
         // Render
         player.render();
